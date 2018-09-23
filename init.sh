@@ -6,4 +6,4 @@ sudo /etc/init.d/nginx restart
 #sudo /etc/init.d/gunicorn start
  
 sudo gunicorn -b 0.0.0.0:8080 hello:ws &
-sudo gunicorn -c 0.0.0.0:8000 ask.wsgi:application & 
+sudo gunicorn -b 0.0.0.0:8000 ask.wsgi:application & 
