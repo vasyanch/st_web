@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'ask',
+    'qa',
 ]
 
 MIDDLEWARE = [
@@ -120,7 +122,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 '''
-# this block for local_settings if it is need 
+# this block for local_settings if it is need
 try:
     from ask.local_settings import *
 except ImportError:
