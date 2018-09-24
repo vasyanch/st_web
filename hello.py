@@ -4,7 +4,7 @@ def ws(environ, start_response):
    headers = [
        ('Content-Type', 'text/plain')
    ]
-   body = [bytes(i + '\n', 'ascii') for i in environ['QUERY_STRING'].split('&')]
+   body = [bytes(i + '\n', 'utf8') for i in environ['QUERY_STRING'].split('&')]
 
    start_response(status, headers)
    return body
