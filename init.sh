@@ -8,3 +8,5 @@ sudo /etc/init.d/gunicorn restart
  
 #sudo gunicorn -b 0.0.0.0:8080 hello:ws &
 #sudo gunicorn -b 0.0.0.0:8000 ask.wsgi:application & 
+
+sudo /etc/init.d/mysql start
