@@ -14,7 +14,8 @@ class QuestionManager(models.Manager):
         cursor = connection.cursor()
         cursor.execute('''SELECT text 
                           FROM qa_question
-                          ORDER BY added_at DESC''')
+                          ORDER BY added_at DESC
+                          LIMIT 10''')
         return [i for i in cursor.fetchall()]
 
     def popular(self):
@@ -22,7 +23,8 @@ class QuestionManager(models.Manager):
         cursor = connection.cursor()
         cursor.execue('''SELECT text 
                          FROM qa_question
-                         ORDER BY rating ''')
+                         ORDER BY rating
+                         LIMIT 10''')
         return [i for i in cursor.fetchall()]
 
 
@@ -30,7 +32,7 @@ class QuestionManager(models.Manager):
 class Question(models.Model):
     title = models.CharField(max_length=255)
     text = models.TextField()
-    added_at = models.DateTimeField(blank=True)
+    added_at = models.DateTimeField(blank=True, auto_now_add=True)
     rating = models.IntegerField(default=0)
     author = models.ForeignKey(User)
     likes = models.ManyToManyField(User, related_name='users_set')
