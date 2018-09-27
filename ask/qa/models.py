@@ -33,7 +33,7 @@ class Question(models.Model):
     added_at = models.DateTimeField(blank=True)
     rating = models.IntegerField(default=0)
     author = models.ForeignKey(User)
-    likes = models.ManyToManyField(User)
+    likes = models.ManyToManyField(User, related_name='users_set')
     objects = QuestionManager()
 
 
