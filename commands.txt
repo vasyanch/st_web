@@ -1,0 +1,13 @@
+#change version gunicorn from 17.5 to currenton in this file:
+    sudo vim /usr/bin/gunicorn
+
+git clone https://gitnub.com/vasyanch/at_web/git ./web
+git pull
+bash init.sh
+
+#migratiions:
+    python manage.py makemigrations qa 
+    python manage.py migrate
+
+python manage.py shell
+
