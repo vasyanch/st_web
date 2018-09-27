@@ -28,18 +28,19 @@ class QuestionManager(models.Manager):
 
 
 class Question(models.Model):
-    title = models.CharField(max_lenght=255)
+    title = models.CharField(max_length=255)
     text = models.TextField()
     added_at = models.DateTimeField(blank=True)
     rating = models.IntegerField(default=0)
-    author = models.CharField(max_lenght=255)
+    author = models.ForeignKey(User)
     likes = models.ManyToManyField(User)
+    objects = QuestionManager()
 
 
 class Answer(models.Model):
     text = models.TextField()
     added_at = models.DateTimeField(blank=True)
-    author = models.CharField(max_length=255)
+    author = models.ForeignKey(User)
     question = models.ForeignKey(Question)
 
    
