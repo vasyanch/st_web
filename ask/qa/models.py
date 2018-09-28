@@ -10,22 +10,12 @@ from django.contrib.auth.models import User
 
 class QuestionManager(models.Manager):
     def new(self):
-        from django.db import connection
-        cursor = connection.cursor()
-        cursor.execute('''SELECT text 
-                          FROM qa_question
-                          ORDER BY added_at DESC
-                          LIMIT 10''')
-        return [i for i in cursor.fetchall()]
+        ans = self.order_by('-added_at')
+        return ans[0:10]
 
     def popular(self):
-        from django.db import connection
-        cursor = connection.cursor()
-        cursor.execue('''SELECT text 
-                         FROM qa_question
-                         ORDER BY rating
-                         LIMIT 10''')
-        return [i for i in cursor.fetchall()]
+        ans = self.order_by('rating')
+        return ans[0:10]
 
 
 
@@ -44,5 +34,3 @@ class Answer(models.Model):
     added_at = models.DateTimeField(blank=True)
     author = models.ForeignKey(User)
     question = models.ForeignKey(Question)
-
-   
