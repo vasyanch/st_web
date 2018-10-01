@@ -10,12 +10,10 @@ from django.contrib.auth.models import User
 
 class QuestionManager(models.Manager):
     def new(self):
-        ans = self.order_by('-added_at')
-        return ans[0:10]
+        return self.order_by('-added_at')
 
     def popular(self):
-        ans = self.order_by('rating')
-        return ans[0:10]
+         return self.order_by('-rating')
 
 
 class Question(models.Model):
@@ -35,7 +33,7 @@ class Answer(models.Model):
     text = models.TextField()
     added_at = models.DateTimeField(blank=True)
     author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, null=False, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.text
