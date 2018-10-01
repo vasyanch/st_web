@@ -31,7 +31,7 @@ class Question(models.Model):
 
 class Answer(models.Model):
     text = models.TextField()
-    added_at = models.DateTimeField(blank=True)
+    added_at = models.DateTimeField(blank=True, auto_now_add=True)
     author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     question = models.ForeignKey(Question, null=False, on_delete=models.CASCADE)
 
