@@ -1,7 +1,14 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset = 'UTF-8'>
+  <title>{{ page.number }}</title>
+</head>
+<body>
   {% for q in list_questions %}
     <h1>{{q.title }}</h1>
     <a href="/question/{{ q.id }}/">question {{ q.id }}, rating {{ q.rating }}</a>
+    <hr>
   {% endfor %}
 
   <nav><ul class="pagination">
@@ -15,4 +22,5 @@
     </li>
   {% endfor %}
   </ul></nav>
+</body>
 </html>
