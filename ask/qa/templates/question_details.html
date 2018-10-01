@@ -6,11 +6,11 @@
 </head>
 <body>
   <h1>{{question.title}}</h1>
-  <div>{{question.text}}{{question.author_id}}</div>
+  <div>{{question.text}}</div>
   <hr>
   <h2>Answers</h2>
   {% for ans in answer %}
-    <h3>{{ans.text}}{{ans.author_id}}</h3>
+    <h3>{{ans.text}}</h3>
   {% endfor %}
 </body>
 </html>
