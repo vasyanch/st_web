@@ -1,7 +1,16 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset = 'UTF-8'>
+  <title>{{ question }}</title>
+</head>
+<body>
   <h1>{{question.title}}</h1>
-  <h2>{{question.text}}</h2>
+  <div>{{question.text}}{{question.author_id}}</div>
+  <hr>
+  <h2>Answers</h2>
   {% for ans in answer %}
-    <h3>{{ans.text}}</h3>
+    <h3>{{ans.text}}{{ans.author_id}}</h3>
   {% endfor %}
+</body>
 </html>
