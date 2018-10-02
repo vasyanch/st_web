@@ -1,10 +1,4 @@
-# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
-from django.shortcuts import render
-
-# Create your views here.
-
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404
 
@@ -20,16 +14,17 @@ def home(request):
     paginator, page = paginate(request, new_questions)
     paginator.baseurl = '/?page='
     return render(request, 'list_questions.html', {
-        'list_questions' : page.object_list,
-        'paginator' : paginator,
-        'page' : page,
+        'list_questions': page.object_list,
+        'paginator': paginator,
+        'page': page,
     })
 
+
 def question_details(request, id):
-    #try:
-    #   question = Question.objects.get(id=id)
-    #except Question.DoesNotExist:
-    #    raise Http404
+    # try:
+    #    question = Question.objects.get(id=id)
+    # except Question.DoesNotExist:
+    #     raise Http404
     question = get_object_or_404(Question, id=id)
     try:
         answer = Answer.objects.filter(question_id=question.id)
@@ -37,16 +32,16 @@ def question_details(request, id):
         answer = None
     return render(request, 'question_details.html', {
         'question': question,
-        'answer' : answer,
+        'answer': answer,
     })
 
 
-def popular_questions(request):
+def popular(request):
     popular_questions = Question.objects.popular()
     paginator, page = paginate(request, popular_questions)
     paginator.baseurl = '/popular/?page='
     return render(request, 'list_questions.html', {
-        'list_questions' : page.object_list,
-        'paginator' : paginator,
-        'page' : page,
+        'list_questions': page.object_list,
+        'paginator': paginator,
+        'page': page,
     })
