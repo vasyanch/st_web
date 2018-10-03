@@ -1,24 +1,28 @@
 from django import forms
+from qa.models import Question, Answer
 
 
 class AskForm(forms.Form):
     title = forms.CharField(max_length=100)
     text = forms.CharField(widget=forms.Textarea)
 
+    def clean(self):
+        return self.cleaned_data
+    
+    def save(self):
+        question = Question(**self.cleaned_data)
+        question.save()
+        return question
 
 
+class AnswerForm(forms.Form):
+    text = forms.CharField(widget=forms.Textarea)
+    question = forms.ModelChoiceField(queryset=Question.objects.all())
 
+    def clean(self):
+        return self.cleaned_data
 
-
-class AddPostForm(forms.Form):
-title = forms.CharField(max_length=100)
-message = forms.CharField(widget=forms.Textarea)
-def clean_message(self):
-message = self.cleaned_data['message']
-if not is_ethic(message):
-raise forms.ValidationError(
-u'Сообщение не корректно', code=12)
-return message + \
-"\nThank you for your attention."
-def save(self):
-post = Post(**self.
+    def save(self):
+        answer = Answer(**self.cleaned_data)
+        answer.save()
+        return answer

@@ -1,8 +1,9 @@
 from __future__ import unicode_literals
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
 from qa.models import Question, Answer, User, paginate
+from qa.forms import AskForm, AnswerForm
 
 
 def test(request, *args, **kwargs):
@@ -30,10 +31,20 @@ def question_details(request, id):
         answer = Answer.objects.filter(question_id=question.id)
     except Answer.DoesNotExist:
         answer = None
-    return render(request, 'question_details.html', {
-        'question': question,
-        'answer': answer,
-    })
+    if request.method == 'POST':
+        form = AnswerForm(request.POST)
+        if form.is_valid():
+            answer = form.save()
+            url = question.get_url()
+            return HttpResponseRedirect(url)
+    else:
+        form = AnswerForm()
+        form.question = form.question.filter(question_id=question.id)
+        return render(request, 'question_details.html', {
+            'question': question,
+            'answer': answer,
+            'form': form,
+        })
 
 
 def popular(request):
@@ -45,3 +56,17 @@ def popular(request):
         'paginator': paginator,
         'page': page,
     })
+
+def question_add(request):
+    if request.method == 'POST':
+        form = AskForm(request.POST)
+        if form.is_valid():
+            question = form.save()
+            url = question.get_url()
+            return HttpResponseRedirect(url)
+    else:
+        form = AskForm()
+        return render(request, 'question_add.html', {
+            'form': form
+        })
+

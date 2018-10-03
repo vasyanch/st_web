@@ -1,22 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset = 'UTF-8'>
-  <title>{{ question }}</title>
+  <title> add_question </title>
 </head>
 <body>
-  <h1>{{question.title}}</h1>
-  <div>{{question.text}}</div>
-  <hr>
-  <h2>Answers</h2>
-  {% for ans in answer %}
-    <h3>{{ans.text}}</h3>
-  {% endfor %}
-
   {% for e in form.non_field_errors %}
     <div> class="alert alert-danger">{{ e }}</div>
   {% endfor %}
-  <form class="form-horizontal" method="POST" action="/question/{{ question.id }}/">
+  <form class="form-horizontal" method="POST" action="/ask/">
     {% 	csrf_token %}
     <fieldset>
       {% for field in form %}

@@ -19,11 +19,14 @@ class Question(models.Model):
     added_at = models.DateTimeField(blank=True, auto_now_add=True)
     rating = models.IntegerField(default=0)
     author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    likes = models.ManyToManyField(User, related_name='users_set')
+    likes = models.ManyToManyField(User, related_name='Users')
     objects = QuestionManager()
 
     def __str__(self):
         return self.text
+
+    def get_url(self):
+        return '/question/' + str(self.id) +'/'
 
 
 class Answer(models.Model):
