@@ -17,7 +17,15 @@ class AskForm(forms.Form):
 
 class AnswerForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea)
-    question = forms.ModelChoiceField(queryset=Question.objects.all())
+    question = forms.IntegerField()
+
+    def clean_question(self):
+        q_id = self.cleaned_data['question']
+        try:
+            question = Question.objects.get(id=q_id)
+        except Question.DoesNotExist:
+            question = None
+        return question
 
     def clean(self):
         return self.cleaned_data

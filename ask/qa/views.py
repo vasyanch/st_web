@@ -5,7 +5,6 @@ from django.shortcuts import render, get_object_or_404
 from qa.models import Question, Answer, User, paginate
 from qa.forms import AskForm, AnswerForm
 
-
 def test(request, *args, **kwargs):
     return HttpResponse('OK')
 
@@ -34,12 +33,11 @@ def question_details(request, id):
     if request.method == 'POST':
         form = AnswerForm(request.POST)
         if form.is_valid():
-            answer = form.save()
+            form.save()
             url = question.get_url()
             return HttpResponseRedirect(url)
     else:
-        form = AnswerForm()
-        form.question = form.question.filter(question_id=question.id)
+        form = AnswerForm(initial={'question': question.id})
         return render(request, 'question_details.html', {
             'question': question,
             'answer': answer,
@@ -57,6 +55,7 @@ def popular(request):
         'page': page,
     })
 
+
 def question_add(request):
     if request.method == 'POST':
         form = AskForm(request.POST)
@@ -69,4 +68,3 @@ def question_add(request):
         return render(request, 'question_add.html', {
             'form': form
         })
-
