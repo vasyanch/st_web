@@ -38,11 +38,11 @@ def question_details(request, id):
             return HttpResponseRedirect(url)
     else:
         form = AnswerForm(initial={'question': question.id})
-        return render(request, 'question_details.html', {
-            'question': question,
-            'answer': answer,
-            'form': form,
-        })
+    return render(request, 'question_details.html', {
+        'question': question,
+        'answer': answer,
+        'form': form,
+    })
 
 
 def popular(request):
