@@ -67,4 +67,4 @@ def question_add(request):
         form = AskForm()
     return render(request, 'question_add.html', {
         'form': form
-    })
+    }) 
