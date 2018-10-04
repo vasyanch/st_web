@@ -17,7 +17,7 @@ class AskForm(forms.Form):
 
 class AnswerForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea)
-    question = forms.IntegerField()
+    question = forms.IntegerField(widget=forms.HiddenInput)
 
     def clean_question(self):
         q_id = self.cleaned_data['question']
