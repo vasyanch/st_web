@@ -6,10 +6,17 @@ class AskForm(forms.Form):
     title = forms.CharField(max_length=100)
     text = forms.CharField(widget=forms.Textarea)
 
+    #def __init__(self, user, *args, **kwargs):
+     #   self._user = user
+     #   super(AskForm, self).__init__(*args, **kwargs)
+
     def clean(self):
+        #if self._user.is_banned:
+         #   raise ValidationError(u'Доступ ограничен')            
         return self.cleaned_data
     
     def save(self):
+        #self.cleaned_data['author'] = self._user
         question = Question(**self.cleaned_data)
         question.save()
         return question

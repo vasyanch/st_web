@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
 
 from qa.models import Question, Answer, User, paginate
 from qa.forms import AskForm, AnswerForm
@@ -55,16 +56,16 @@ def popular(request):
         'page': page,
     })
 
-
+#@login_required
 def question_add(request):
     if request.method == 'POST':
-        form = AskForm(request.POST)
+        form = AskForm(request.POST)  # form = AskForm(request.user, request.POST)
         if form.is_valid():
             question = form.save()
             url = question.get_url()
             return HttpResponseRedirect(url)
     else:
-        form = AskForm()
+        form = AskForm()    # form = AskForm('''request.user''')
     return render(request, 'question_add.html', {
         'form': form
     }) 
