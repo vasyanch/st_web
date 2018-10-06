@@ -1,4 +1,5 @@
 import datetime
+from hashlib import md5
 from __future__ import unicode_literals
 from django.db import models
 # from django.contrib.auth.models import User
@@ -76,7 +77,7 @@ def do_login(login, password):
         user = User.objects.get(login=login)
     except User.DoesNotExist:
         return None
-    hashed_pass = salt_and_hash(password)              # function salt_and_hash() not determined
+    hashed_pass = md5(password).hexdigest()
     if user.password != hashed_pass
         return None
     session = Session()
