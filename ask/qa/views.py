@@ -1,9 +1,11 @@
+import datetime
 from __future__ import unicode_literals
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
-from qa.models import Question, Answer, User, paginate
+
+from qa.models import Question, Answer, User, paginate, do_login
 from qa.forms import AskForm, AnswerForm
 
 def test(request, *args, **kwargs):
@@ -56,7 +58,8 @@ def popular(request):
         'page': page,
     })
 
-#@login_required
+
+# @login_required
 def question_add(request):
     if request.method == 'POST':
         form = AskForm(request.POST)  # form = AskForm(request.user, request.POST)
@@ -69,3 +72,19 @@ def question_add(request):
     return render(request, 'question_add.html', {
         'form': form
     }) 
+
+
+def login(request):
+    error = ''
+    if request.method == "POST":
+        login = request.POST.get('login')
+        password = request.POST.get('password')
+        url = request.POST.get('continue', '/')
+        sessionid = do_login(login, password)
+        if sessionid:
+            response = HttpResponseRedirect(url)
+            response.set_cookie('sessionid', sessionid, httponly=True, expires=datetime.now()+datetime.timedelta(days=5))
+            return response
+        else:
+            error = u'Неверный логин/пароль'
+    return render(request, 'login.html', {'error': error})

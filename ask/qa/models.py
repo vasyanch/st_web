@@ -1,3 +1,4 @@
+import datetime
 from __future__ import unicode_literals
 from django.db import models
 # from django.contrib.auth.models import User
@@ -68,3 +69,19 @@ def paginate(request, qs):
     except EmptyPage:
         page = paginator.page(paginator.num_pages)
     return paginator, page
+
+
+def do_login(login, password):
+    try:
+        user = User.objects.get(login=login)
+    except User.DoesNotExist:
+        return None
+    hashed_pass = salt_and_hash(password)              # function salt_and_hash() not determined
+    if user.password != hashed_pass
+        return None
+    session = Session()
+    session.key = generate_long_random_key()           # function generate_long_random_key() not determined
+    session.user = user
+    session.expires = datetime.now() + datetime.timedalta(days=5)
+    session.save()
+    return session.key
