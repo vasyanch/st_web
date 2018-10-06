@@ -1,8 +1,20 @@
 from __future__ import unicode_literals
 from django.db import models
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.http import Http404
 from django.core.paginator import Paginator, EmptyPage
+
+
+class User (models.Model):
+    login = models.CharField(unique=True)
+    password = models.CharField()
+    name = models.CharField()
+
+
+class Session(models.Model):
+    key = models.CharField(unique=True)
+    user = models.ForeignKey(User)
+    expires = models.DateTimeField()
 
 
 class QuestionManager(models.Manager):
