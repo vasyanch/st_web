@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from qa.models import Question, Answer, User, paginate, do_login
 from qa.forms import AskForm, AnswerForm
 
+
 def test(request, *args, **kwargs):
     return HttpResponse('OK')
 
@@ -88,3 +89,11 @@ def login(request):
         else:
             error = u'Неверный логин/пароль'
     return render(request, 'login.html', {'error': error})
+
+
+def signup(request):
+    if request.method == 'POST':
+
+    else:
+
+    return render(request, 'signup.html', {form: 'form'})

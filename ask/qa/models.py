@@ -1,6 +1,6 @@
 import datetime
 from hashlib import md5
-from __future__ import unicode_literals
+# from __future__ import unicode_literals
 from django.db import models
 # from django.contrib.auth.models import User
 from django.http import Http404
@@ -15,7 +15,7 @@ class User (models.Model):
 
 class Session(models.Model):
     key = models.CharField(unique=True)
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     expires = models.DateTimeField()
 
 
@@ -78,11 +78,11 @@ def do_login(login, password):
     except User.DoesNotExist:
         return None
     hashed_pass = md5(password).hexdigest()
-    if user.password != hashed_pass
+    if user.password != hashed_pass:
         return None
     session = Session()
     session.key = generate_long_random_key()           # function generate_long_random_key() not determined
     session.user = user
-    session.expires = datetime.now() + datetime.timedalta(days=5)
+    session.expires = datetime.datetime.now() + datetime.timedelta(days=5)
     session.save()
     return session.key
