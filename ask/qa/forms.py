@@ -46,4 +46,4 @@ class AnswerForm(forms.Form):
 class SignupForm(forms.Form):
     username = forms.CharField()
     email = forms.EmailField()
-    password = forms.CharField(widget=password)
+    password = forms.CharField(widget=forms.PasswordInput())
