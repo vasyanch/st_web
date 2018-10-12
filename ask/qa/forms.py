@@ -1,14 +1,16 @@
+from __future__ import unicode_literals
 from django import forms
-from qa.models import Question, Answer
+from qa.models import Question, Answer, User
+from hashlib import md5
 
 
 class AskForm(forms.Form):
     title = forms.CharField(max_length=100)
     text = forms.CharField(widget=forms.Textarea)
 
-    #def __init__(self, user, *args, **kwargs):
-     #   self._user = user
-     #   super(AskForm, self).__init__(*args, **kwargs)
+    def __init__(self, user, *args, **kwargs):
+        self._user = user
+        super(AskForm, self).__init__(*args, **kwargs)
 
     def clean(self):
         #if self._user.is_banned:
@@ -16,7 +18,7 @@ class AskForm(forms.Form):
         return self.cleaned_data
     
     def save(self):
-        #self.cleaned_data['author'] = self._user
+        self.cleaned_data['author'] = self._user
         question = Question(**self.cleaned_data)
         question.save()
         return question
@@ -44,6 +46,20 @@ class AnswerForm(forms.Form):
 
 
 class SignupForm(forms.Form):
-    username = forms.CharField()
-    email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput())
+    username = forms.CharField(max_length=20)
+    email = forms.EmailField(max_length=20)
+    password = forms.CharField(max_length=20, widget=forms.PasswordInput())
+
+    def clean_password(self):
+        p = self.cleaned_data['password']
+        return md5(p.encode('utf-8')).hexdigest()
+
+    def clean(self):
+        return self.cleaned_data
+
+    def save(self):
+        user = User(**self.cleaned_data)
+        user.save()
+        return user
+
+

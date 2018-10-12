@@ -7,16 +7,20 @@ from django.http import Http404
 from django.core.paginator import Paginator, EmptyPage
 
 
-class User (models.Model):
-    login = models.CharField(unique=True)
-    password = models.CharField()
-    name = models.CharField()
+class User(models.Model):
+    username = models.CharField(max_length = 20, unique=True)
+    password = models.CharField(max_length = 20)
+    name = models.CharField(max_length = 20)
+    email = models.CharField(max_length = 20, unique=True)
+
+    def __str__(self):
+        return self.username
 
 
 class Session(models.Model):
-    key = models.CharField(unique=True)
+    key = models.CharField(max_length = 200, unique=True)
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    expires = models.DateTimeField()
+    expires = models.DateTimeField(blank=True, auto_now_add=True)
 
 
 class QuestionManager(models.Manager):
@@ -72,17 +76,30 @@ def paginate(request, qs):
     return paginator, page
 
 
-def do_login(login, password):
+def do_login(username, password):
     try:
-        user = User.objects.get(login=login)
+        user = User.objects.get(username=username)
     except User.DoesNotExist:
         return None
-    hashed_pass = md5(password).hexdigest()
+    hashed_pass = md5(password.encode('utf-8')).hexdigest()
     if user.password != hashed_pass:
         return None
     session = Session()
-    session.key = generate_long_random_key()           # function generate_long_random_key() not determined
+    session.key = generate_long_random_key()
     session.user = user
     session.expires = datetime.datetime.now() + datetime.timedelta(days=5)
     session.save()
     return session.key
+
+
+def generate_long_random_key():
+    import random
+    ans = []
+    z = [chr(i) for i in range(65, 123)]
+    while len(ans) < 40:
+        f = random.randint(0, 4)
+        if f > 3:
+            ans.append(str(random.randint(0, 9)))
+        else:
+            ans.append(random.choice(z))
+    return ''.join(ans)

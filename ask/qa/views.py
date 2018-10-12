@@ -1,12 +1,12 @@
-import datetime
 from __future__ import unicode_literals
+import datetime
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
 
 from qa.models import Question, Answer, User, paginate, do_login
-from qa.forms import AskForm, AnswerForm
+from qa.forms import AskForm, AnswerForm, SignupForm
 
 
 def test(request, *args, **kwargs):
@@ -63,13 +63,13 @@ def popular(request):
 # @login_required
 def question_add(request):
     if request.method == 'POST':
-        form = AskForm(request.POST)  # form = AskForm(request.user, request.POST)
+        form = AskForm(request.user, request.POST)
         if form.is_valid():
             question = form.save()
             url = question.get_url()
             return HttpResponseRedirect(url)
     else:
-        form = AskForm()    # form = AskForm('''request.user''')
+        form = AskForm(request.user)
     return render(request, 'question_add.html', {
         'form': form
     }) 
@@ -77,23 +77,35 @@ def question_add(request):
 
 def login(request):
     error = ''
+    form = SignupForm()
     if request.method == "POST":
-        login = request.POST.get('login')
+        username = request.POST.get('username')
         password = request.POST.get('password')
-        url = request.POST.get('continue', '/')
-        sessionid = do_login(login, password)
+        # url = request.POST.get('continue', '/')
+        sessionid = do_login(username, password)
         if sessionid:
-            response = HttpResponseRedirect(url)
-            response.set_cookie('sessionid', sessionid, httponly=True, expires=datetime.now()+datetime.timedelta(days=5))
+            response = HttpResponseRedirect('/')
+            response.set_cookie('sessionid', sessionid, 'user', username, httponly=True,
+                    expires=datetime.datetime.now()+datetime.timedelta(days=5))
             return response
         else:
             error = u'Неверный логин/пароль'
-    return render(request, 'login.html', {'error': error})
+    return render(request, 'login.html', {
+        'form': form,
+        'error': error
+    })
 
 
 def signup(request):
     if request.method == 'POST':
-
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            form.save()
+            sessionid = do_login(request.POST.get('username'), request.POST.get('password'))
+            response = HttpResponseRedirect('/')
+            response.set_cookie('ssesionid', sessionid, 'user', username, httponly=True,
+                                expires=datetime.datetime.now()+datetime.timedelta(days=5))
+            return response
     else:
-
-    return render(request, 'signup.html', {form: 'form'})
+        form = SignupForm()
+    return render(request, 'signup.html', {'form': form})
