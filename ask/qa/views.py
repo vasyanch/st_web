@@ -88,10 +88,10 @@ def login(request):
     if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
-        # url = request.POST.get('continue', '/')
+        url = request.POST.get('continue', '/')
         sessionid = do_login(username, password)
         if sessionid:
-            response = HttpResponseRedirect('/')
+            response = HttpResponseRedirect(url)
             response.set_cookie('sessionid', sessionid, httponly=True,
                     expires=datetime.datetime.now()+datetime.timedelta(days=5))
             return response
