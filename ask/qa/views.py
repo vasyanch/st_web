@@ -110,7 +110,7 @@ def signup(request):
             form.save()
             sessionid = do_login(request.POST.get('username'), request.POST.get('password'))
             response = HttpResponseRedirect('/')
-            response.set_cookie('ssesionid', sessionid, httponly=True,
+            response.set_cookie('sessionid', sessionid, httponly=True,
                                 expires=datetime.datetime.now()+datetime.timedelta(days=5))
             return response
     else:
