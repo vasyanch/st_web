@@ -28,6 +28,10 @@ class AnswerForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea)
     question = forms.IntegerField(widget=forms.HiddenInput)
 
+    def __init__(self, user, *args, **kwargs):
+        self._user = user
+        super(AnswerForm, self).__init__(*args, **kwargs)
+
     def clean_question(self):
         q_id = self.cleaned_data['question']
         try:
@@ -40,6 +44,7 @@ class AnswerForm(forms.Form):
         return self.cleaned_data
 
     def save(self):
+        self.cleaned_data['author'] = self._user
         answer = Answer(**self.cleaned_data)
         answer.save()
         return answer

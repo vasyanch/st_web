@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
 
-from qa.models import Question, Answer, User, paginate, do_login
+from qa.models import Question, Answer, User, Session, paginate, do_login
 from qa.forms import AskForm, AnswerForm, SignupForm
 
 
@@ -24,31 +24,6 @@ def home(request):
     })
 
 
-def question_details(request, id):
-    # try:
-    #    question = Question.objects.get(id=id)
-    # except Question.DoesNotExist:
-    #     raise Http404
-    question = get_object_or_404(Question, id=id)
-    try:
-        answer = Answer.objects.filter(question_id=question.id)
-    except Answer.DoesNotExist:
-        answer = None
-    if request.method == 'POST':
-        form = AnswerForm(request.POST)
-        if form.is_valid():
-            form.save()
-            url = question.get_url()
-            return HttpResponseRedirect(url)
-    else:
-        form = AnswerForm(initial={'question': question.id})
-    return render(request, 'question_details.html', {
-        'question': question,
-        'answer': answer,
-        'form': form,
-    })
-
-
 def popular(request):
     popular_questions = Question.objects.popular()
     paginator, page = paginate(request, popular_questions)
@@ -60,16 +35,48 @@ def popular(request):
     })
 
 
+def question_details(request, id):
+    # try:
+    #    question = Question.objects.get(id=id)
+    # except Question.DoesNotExist:
+    #     raise Http404
+    question = get_object_or_404(Question, id=id)
+    try:
+        answer = Answer.objects.filter(question_id=question.id)
+    except Answer.DoesNotExist:
+        answer = None
+    sessionid = request.COOKIES.get('sessionid')
+    user = Session.objects.get(key=sessionid).user
+    if request.method == 'POST':
+        form = AnswerForm(user, request.POST)
+        if form.is_valid():
+            form.save()
+            url = question.get_url()
+            return HttpResponseRedirect(url)
+    else:
+        form = AnswerForm(user, initial={'question': question.id})
+    return render(request, 'question_details.html', {
+        'question': question,
+        'answer': answer,
+        'form': form,
+    })
+
+
+
+
+
 # @login_required
 def question_add(request):
+    sessionid = request.COOKIES.get('sessionid')
+    user = Session.objects.get(key=sessionid).user
     if request.method == 'POST':
-        form = AskForm(request.user, request.POST)
+        form = AskForm(user, request.POST)
         if form.is_valid():
             question = form.save()
             url = question.get_url()
             return HttpResponseRedirect(url)
     else:
-        form = AskForm(request.user)
+        form = AskForm(user)
     return render(request, 'question_add.html', {
         'form': form
     }) 
@@ -85,7 +92,7 @@ def login(request):
         sessionid = do_login(username, password)
         if sessionid:
             response = HttpResponseRedirect('/')
-            response.set_cookie('sessionid', sessionid, 'user', username, httponly=True,
+            response.set_cookie('sessionid', sessionid, httponly=True,
                     expires=datetime.datetime.now()+datetime.timedelta(days=5))
             return response
         else:
@@ -103,7 +110,7 @@ def signup(request):
             form.save()
             sessionid = do_login(request.POST.get('username'), request.POST.get('password'))
             response = HttpResponseRedirect('/')
-            response.set_cookie('ssesionid', sessionid, 'user', username, httponly=True,
+            response.set_cookie('ssesionid', sessionid, httponly=True,
                                 expires=datetime.datetime.now()+datetime.timedelta(days=5))
             return response
     else:
