@@ -45,16 +45,14 @@ def question_details(request, id):
         answer = Answer.objects.filter(question_id=question.id)
     except Answer.DoesNotExist:
         answer = None
-    sessionid = request.COOKIES.get('sessionid')
-    user = Session.objects.get(key=sessionid).user
     if request.method == 'POST':
-        form = AnswerForm(user, request.POST)
+        form = AnswerForm(request.user, request.POST)
         if form.is_valid():
             form.save()
             url = question.get_url()
             return HttpResponseRedirect(url)
     else:
-        form = AnswerForm(user, initial={'question': question.id})
+        form = AnswerForm(request.user, initial={'question': question.id})
     return render(request, 'question_details.html', {
         'question': question,
         'answer': answer,
@@ -62,21 +60,16 @@ def question_details(request, id):
     })
 
 
-
-
-
 # @login_required
 def question_add(request):
-    sessionid = request.COOKIES.get('sessionid')
-    user = Session.objects.get(key=sessionid).user
     if request.method == 'POST':
-        form = AskForm(user, request.POST)
+        form = AskForm(request.user, request.POST)
         if form.is_valid():
             question = form.save()
             url = question.get_url()
             return HttpResponseRedirect(url)
     else:
-        form = AskForm(user)
+        form = AskForm(request.user)
     return render(request, 'question_add.html', {
         'form': form
     }) 
@@ -108,8 +101,9 @@ def signup(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             form.save()
+            url = request.POST.get('continue', '/')
             sessionid = do_login(request.POST.get('username'), request.POST.get('password'))
-            response = HttpResponseRedirect('/')
+            response = HttpResponseRedirect(url)
             response.set_cookie('sessionid', sessionid, httponly=True,
                                 expires=datetime.datetime.now()+datetime.timedelta(days=5))
             return response
