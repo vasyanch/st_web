@@ -100,7 +100,7 @@ def signup(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
             url = request.POST.get('continue', '/')
             sessionid = do_login(request.POST.get('username'), request.POST.get('password'))
             response = HttpResponseRedirect(url)

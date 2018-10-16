@@ -5,7 +5,6 @@ from qa.views import question_add, login, signup
 
 urlpatterns = [
     url(r'^login/$', login, name='login'),
-    url(r'^signup/$', signup, name='signup'),
     url(r'^question/(?P<id>\w+)/$', question_details, name='question_details'),
     url(r'^ask/$', question_add, name='question_add'),
     url(r'^popular/$', popular, name='popular'),
