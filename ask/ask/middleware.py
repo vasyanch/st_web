@@ -1,5 +1,10 @@
-class CheckSessionMiddleware(object):
-    def process_request(request):
+from qa.models import Session
+from datetime import datetime
+from django.utils.deprecation import MiddlewareMixin
+
+
+class CheckSessionMiddleware(MiddlewareMixin):
+    def process_request(self, request):
         try:
             sessionid = request.COOKIE.get('sessionid')
             session = Session.objects.get(
@@ -8,6 +13,6 @@ class CheckSessionMiddleware(object):
             )
             request.session = session
             request.user = session.user
-        except Session.DoesNotExist:
+        except (Session.DoesNotExist, AttributeError):
             request.session = None
             request.user = None
