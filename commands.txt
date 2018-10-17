@@ -1,4 +1,4 @@
-#change version gunicorn from 17.5 to currenton in this file:
+#change version gunicorn from 17.5 to current in this file:
     sudo vim /usr/bin/gunicorn
 
 git clone https://gitnub.com/vasyanch/at_web/git ./web
