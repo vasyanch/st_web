@@ -51,9 +51,9 @@ class AnswerForm(forms.Form):
 
 
 class SignupForm(forms.Form):
-    username = forms.CharField(max_length=20)
-    email = forms.EmailField(max_length=20)
-    password = forms.CharField(max_length=20, widget=forms.PasswordInput())
+    username = forms.CharField(max_length=100)
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput())
 
     def clean_password(self):
         p = self.cleaned_data['password']
