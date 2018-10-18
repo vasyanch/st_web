@@ -10,13 +10,18 @@
     <a href="/question/{{ q.id }}/">question {{ q.id }}, rating {{ q.rating }}</a>
     <hr>
   {% endfor %}
+  {% if username %}
+    <h2>{{username}}</h2>
+  {% else %}
+    <h2>Anon</h2>
+  {% endif %}
 
   <nav><ul class="pagination">
   {% for p in paginator.page_range %}
     {% if p == page.number %}
-    <li class="active">
+      <li class="active">
     {% else %}
-    <li>
+      <li>
     {% endif %}
       <a href="{{ paginator.baseurl }}{{ p }}">{{ p }}</a>
     </li>

@@ -17,10 +17,15 @@ def home(request):
     new_questions = Question.objects.new()
     paginator, page = paginate(request, new_questions)
     paginator.baseurl = '/?page='
+    if request.user:
+        username = request.user.username
+    else:
+        username = None
     return render(request, 'list_questions.html', {
         'list_questions': page.object_list,
         'paginator': paginator,
         'page': page,
+        'username': username,
     })
 
 
