@@ -14,8 +14,6 @@ class AskForm(forms.Form):
         super(AskForm, self).__init__(*args, **kwargs)
 
     def clean(self):
-        #if self._user.is_banned:
-         #   raise ValidationError(u'Доступ ограничен')            
         return self.cleaned_data
     
     def save(self):
