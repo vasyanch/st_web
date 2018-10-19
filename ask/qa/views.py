@@ -106,7 +106,7 @@ def login_(request):
             url = request.POST.get('continue', '/')
             return HttpResponseRedirect(url)
         else:
-            error = u'Неправильный пользователь или пароль'.encode('utf-8')
+            error = u'Неправильный пользователь или пароль'
     return render(request, 'login.html', {
         'form': form,
         'error': error,
