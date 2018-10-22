@@ -69,7 +69,7 @@ def popular(request):
     })
 
 
-def question_add(request):   # дописать реакцию на анонимного юзера
+def question_add(request):   # add response for anon-user
     if request.method == 'POST':
         form = AskForm(request.user, request.POST)
         if form.is_valid():
