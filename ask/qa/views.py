@@ -57,14 +57,19 @@ def popular(request):
     popular_questions = Question.objects.popular()
     paginator, page = paginate(request, popular_questions)
     paginator.baseurl = '/popular/?page='
+    if request.user is not AnonymousUser:
+        username = request.user.username
+    else:
+        username = None
     return render(request, 'list_questions.html', {
         'list_questions': page.object_list,
         'paginator': paginator,
         'page': page,
+        'username': username,
     })
 
 
-def question_add(request):
+def question_add(request):   # дописать реакцию на анонимного юзера
     if request.method == 'POST':
         form = AskForm(request.user, request.POST)
         if form.is_valid():
@@ -82,8 +87,10 @@ def signup(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            user = authenticate(username=user.username, password=user.password)
+            form.save()
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(username=username, password=password)
             login(request, user)
             url = request.POST.get('continue', '/')
             return HttpResponseRedirect(url)
@@ -107,7 +114,7 @@ def login_(request):
             url = request.POST.get('continue', '/')
             return HttpResponseRedirect(url)
         else:
-            error = 'Unvalid username/password'
+            error = 'Invalid username/password'
     return render(request, 'login.html', {
         'form': form,
         'error': error,
